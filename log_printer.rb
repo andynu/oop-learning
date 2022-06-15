@@ -11,21 +11,26 @@ class LogPrinter
   end
 
   def print_aggregate
-    aggregator
+    [
+      'WEBPAGES WITH MOST PAGE VIEWS:',
+      most_page_views,
+      'WEBPAGES WITH MOST UNIQUE PAGE VIEWS:',
+      most_unique_page_views
+    ].join("\n")
   end
 
-  def aggregator
-    ['WEBPAGES WITH MOST PAGE VIEWS:', most_page_views,
-     'WEBPAGES WITH MOST UNIQUE PAGE VIEWS:', most_unique_page_views].join("\n")
-  end
+  private
 
   def most_page_views
-    page_views = log_processor.page_views
-    page_views.map { |path, ip_count| "#{path} - #{ip_count} visits" }.join("\n")
+    fmt_hash log_processor.page_views, 'visits'
   end
 
   def most_unique_page_views
-    unique_views = log_processor.unique_page_views
-    unique_views.map { |path, uniq_ips| "#{path} - #{uniq_ips} unique views" }.join("\n")
+    fmt_hash log_processor.unique_page_views, 'unique views'
+  end
+
+
+  def fmt_hash(hash, count_label)
+    hash.map { |key, value| "#{key} - #{value} #{count_label}" }.join("\n")
   end
 end
