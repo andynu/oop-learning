@@ -16,7 +16,7 @@ class LogPrinter
   # end
 
   def print_aggregate
-    puts aggregator
+    aggregator
   end
 
   def aggregator

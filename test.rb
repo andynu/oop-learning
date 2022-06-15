@@ -5,7 +5,7 @@ require_relative './parser'
 
 class TestParser < Minitest::Test
   def test_parser_result
-    expected = <<~STR
+    expected = <<~STR.strip
       WEBPAGES WITH MOST PAGE VIEWS:
       /help_page/1 - 4 visits
       /index - 1 visits
