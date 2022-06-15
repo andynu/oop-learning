@@ -4,10 +4,10 @@
 require './log_processor'
 
 class LogPrinter
-  attr_accessor :log_processor
+  attr_accessor :page_stats
 
-  def initialize(log_processor)
-    @log_processor = log_processor
+  def initialize(page_stats)
+    @page_stats = page_stats
   end
 
   def to_s
@@ -22,14 +22,22 @@ class LogPrinter
   private
 
   def most_page_views
-    fmt_hash log_processor.page_views, 'visits'
+    page_views = page_stats.transform_values(&:page_views).sort_by(&pair_arr_sort).reverse
+    fmt_hash page_views, 'visits'
   end
 
   def most_unique_page_views
-    fmt_hash log_processor.unique_page_views, 'unique views'
+    unique_page_views = page_stats.transform_values(&:unique_page_views).sort_by(&pair_arr_sort).reverse
+    fmt_hash unique_page_views, 'unique views'
   end
 
   def fmt_hash(hash, count_label)
     hash.map { |key, value| "#{key} - #{value} #{count_label}" }.join("\n")
   end
+
+  def pair_arr_sort 
+    lambda {|(k, v)| v }
+  end
+
+
 end

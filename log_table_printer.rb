@@ -4,10 +4,10 @@
 require './log_processor'
 
 class LogTablePrinter
-  attr_accessor :log_processor
+  attr_accessor :page_stats
 
-  def initialize(log_processor)
-    @log_processor = log_processor
+  def initialize(page_stats)
+    @page_stats = page_stats
   end
 
   def to_s
@@ -22,11 +22,13 @@ class LogTablePrinter
   private
 
   def most_page_views
-    fmt_hash_table log_processor.page_views, 'visits'
+    page_views = page_stats.transform_values(&:page_views).sort_by(&pair_arr_sort).reverse
+    fmt_hash_table page_views, 'visits'
   end
 
   def most_unique_page_views
-    fmt_hash_table log_processor.unique_page_views, 'uniq views'
+    unique_page_views = page_stats.transform_values(&:unique_page_views).sort_by(&pair_arr_sort).reverse
+    fmt_hash_table unique_page_views, 'uniq views'
   end
 
   def fmt_hash_table(hash, value_label)
@@ -36,5 +38,9 @@ class LogTablePrinter
       "| %#{key_max_size}s | %#{value_max_size}s %s |" %
         [path, uniq_ips, value_label]
     end.join("\n")
+  end
+
+  def pair_arr_sort 
+    lambda {|(k, v)| v }
   end
 end
