@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 require './log_printer'
-require 'pry'
+
 class Parser
   attr_reader :file_name, :log_printer
 
