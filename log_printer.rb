@@ -4,16 +4,11 @@
 require './log_processor'
 
 class LogPrinter
-  attr_accessor :file_name, :log_processor
+  attr_accessor :log_processor
 
-  def initialize(file_name, log_processor: LogProcessor)
-    @file_name = file_name
-    @log_processor = log_processor.new(@file_name)
+  def initialize(log_processor)
+    @log_processor = log_processor
   end
-
-  # def call(file_name)
-  #   new(file_name).print_aggregate
-  # end
 
   def print_aggregate
     aggregator

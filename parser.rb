@@ -6,13 +6,15 @@ require './log_printer'
 class Parser
   attr_reader :file_name, :log_printer
 
-  def initialize(file_name, log_printer: LogPrinter)
+  def initialize(file_name, log_printer: LogPrinter, log_processor: LogProcessor)
     @file_name = file_name
-    @log_printer = log_printer.new(file_name)
+    @log_processor = log_processor.new(file_name)
+    @log_printer = log_printer.new(@log_processor)
   end
 
   def run
     return expected_command_hint unless file_name_correct?
+
 
     log_printer.print_aggregate
   end
