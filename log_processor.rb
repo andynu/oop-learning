@@ -20,12 +20,12 @@ class LogProcessor
   end
 
   def page_views
-    result = log_statistics.inject({}) { |hash, (path, ips)| hash.merge(path => ips.count) }
+    result = log_statistics.each_with_object({}) { |(path, ips), hash| hash[path] = ips.count }
     result.sort_by { |_path, count| count }.reverse
   end
 
   def unique_page_views
-    result = log_statistics.inject({}) { |hash, (path, ips)| hash.merge(path => ips.uniq.count) }
+    result = log_statistics.each_with_object({}) { |(path, ips), hash| hash[path] = ips.uniq.count }
     result.sort_by { |_path, count| count }.reverse
   end
 end
