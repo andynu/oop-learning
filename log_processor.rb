@@ -5,18 +5,17 @@ class LogProcessor
   attr_accessor :log_file, :log_statistics
 
   def initialize(file_name)
-    return unless file_name == 'links.log'
-
-    self.log_file = File.read(file_name)
-    self.log_statistics = Hash.new { |h, k| h[k] = [] } # auto vivifying array values.
-    process_log_file
+    @file_name = file_name
   end
 
-  def process_log_file
+  def process
+    @log_file = File.read(@file_name)
+    @log_statistics = Hash.new { |h, k| h[k] = [] } # auto vivifying array values.
     log_file.each_line do |line|
       path, ip = line.split(' ')
       log_statistics[path] << ip
     end
+    self
   end
 
   def page_views

@@ -16,7 +16,7 @@ class Parser
   def run
     return expected_command_hint unless file_name_correct?
 
-    log_processor = @log_processor_class.new(file_name)
+    log_processor = @log_processor_class.new(file_name).process
     log_printer = @log_printer_class.new(log_processor)
     log_printer
   end
