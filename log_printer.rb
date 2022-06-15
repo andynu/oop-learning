@@ -22,17 +22,16 @@ class LogPrinter
   private
 
   def most_page_views
-    page_views = page_stats.transform_values(&:page_views).sort_by(&pair_arr_sort).reverse
-    fmt_hash page_views, 'visits'
+    fmt_list :page_views, 'visits'
   end
 
   def most_unique_page_views
-    unique_page_views = page_stats.transform_values(&:unique_page_views).sort_by(&pair_arr_sort).reverse
-    fmt_hash unique_page_views, 'unique views'
+    fmt_list :unique_page_views, 'unique views'
   end
 
-  def fmt_hash(hash, count_label)
-    hash.map { |key, value| "#{key} - #{value} #{count_label}" }.join("\n")
+  def fmt_list(key, count_label)
+    hash = page_stats.transform_values{|stats| stats.send(key)}.sort_by(&pair_arr_sort).reverse
+    hash.map { |path, value| "#{path} - #{value} #{count_label}" }.join("\n")
   end
 
   def pair_arr_sort 
