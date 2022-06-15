@@ -20,7 +20,7 @@ class Parser
   private
 
   def file_name_correct?
-    file_name == 'webserver.log'
+    file_name == 'links.log'
   end
 
   def expected_command_hint
