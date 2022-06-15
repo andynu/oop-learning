@@ -19,7 +19,7 @@ class TestParser < Minitest::Test
       /home - 1 unique views
       /contact - 1 unique views
     STR
-    actual = Parser.new('links.log').parser_result
+    actual = Parser.new('links.log').run
 
     assert_equal expected, actual
   end

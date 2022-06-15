@@ -11,7 +11,7 @@ class Parser
     @log_printer = log_printer
   end
 
-  def parser_result
+  def run
     return expected_command_hint unless file_name_correct?
 
     log_printer.print_aggregate
@@ -29,7 +29,7 @@ class Parser
 end
 
 if $0 == __FILE__
-  puts Parser.new(ARGV.first).parser_result
+  puts Parser.new(ARGV.first).run
   # Parser.new(ARGV.first)
 end
 
