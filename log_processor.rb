@@ -20,13 +20,17 @@ class LogProcessor
   end
 
   def page_views
-    result = log_statistics.transform_values(&:count)
-    result.sort_by { |_path, count| count }.reverse
+    hash_sort_decending log_statistics.transform_values(&:count)
   end
 
   def unique_page_views
-    result = log_statistics.transform_values {|ips| ips.uniq.count }
-    result.sort_by { |_path, count| count }.reverse
+    hash_sort_decending log_statistics.transform_values {|ips| ips.uniq.count }
+  end
+
+  private
+
+  def hash_sort_decending(hash)
+    hash.sort_by { |_, value| value }.reverse
   end
 end
 
