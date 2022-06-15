@@ -28,6 +28,8 @@ class Parser
   end
 end
 
-Parser.new(ARGV.first).parser_result
-# Parser.new(ARGV.first)
+if $0 == __FILE__
+  Parser.new(ARGV.first).parser_result
+  # Parser.new(ARGV.first)
+end
 
