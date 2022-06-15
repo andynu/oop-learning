@@ -5,18 +5,19 @@ require './log_printer'
 require './log_table_printer'
 
 class Parser
-  attr_reader :file_name, :log_printer
+  attr_reader :file_name
 
   def initialize(file_name, log_printer: LogPrinter, log_processor: LogProcessor)
     @file_name = file_name
-    @log_processor = log_processor.new(file_name)
-    @log_printer = log_printer.new(@log_processor)
+    @log_processor_class = log_processor
+    @log_printer_class = log_printer
   end
 
   def run
     return expected_command_hint unless file_name_correct?
 
-
+    log_processor = @log_processor_class.new(file_name)
+    log_printer = @log_printer_class.new(log_processor)
     log_printer.print_aggregate
   end
 
