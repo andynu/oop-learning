@@ -14,19 +14,22 @@ class LogProcessor
 
   def process
     log_events = File.readlines(@file_name).map { |line| LogEvent.new(*line.split) }
-    log_statistics = log_events.group_by(&:path).transform_values{ |events| events.map(&:ip) }
+    log_statistics = log_events.group_by(&:path).transform_values{ |events| 
+      ips = events.map(&:ip) 
+      OpenStruct.new(
+        page_views: ips.count,
+        unique_page_views: ips.uniq.count
+      )
+    }
+
+    reverse_sort = lambda {|(k, v)| v }
 
     OpenStruct.new(
-      page_views: hash_sort_decending(log_statistics.transform_values(&:count)),
-      unique_page_views: hash_sort_decending(log_statistics.transform_values { |ips| ips.uniq.count })
+      page_views: log_statistics.transform_values(&:page_views).sort_by(&reverse_sort).reverse,
+      unique_page_views: log_statistics.transform_values(&:unique_page_views).sort_by(&reverse_sort).reverse
     )
   end
 
-  private
-
-  def hash_sort_decending(hash)
-    hash.sort_by { |_, value| value }.reverse
-  end
 end
 
 # rescue FileReadError => e
