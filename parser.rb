@@ -24,7 +24,7 @@ class Parser
   end
 
   def expected_command_hint
-    puts 'The right usage is: ./parser.rb webserver.log'
+    puts 'The right usage is: ./parser.rb links.log'
   end
 end
 
