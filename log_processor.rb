@@ -8,14 +8,14 @@ class LogProcessor
     return unless file_name == 'links.log'
 
     self.log_file = File.read(file_name)
-    self.log_statistics = {}
+    self.log_statistics = Hash.new { |h, k| h[k] = [] } # auto vivifying array values.
     process_log_file
   end
 
   def process_log_file
     log_file.each_line do |line|
       path, ip = line.split(' ')
-      log_statistics.key?(path) ? log_statistics[path] << ip : log_statistics[path] = [ip]
+      log_statistics[path] << ip
     end
   end
 
