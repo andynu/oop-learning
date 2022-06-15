@@ -3,6 +3,7 @@
 
 class LogProcessor
   attr_accessor :log_file, :log_statistics
+  attr_reader :page_views, :unique_page_views
 
   def initialize(file_name)
     @file_name = file_name
@@ -15,15 +16,9 @@ class LogProcessor
       path, ip = line.split(' ')
       log_statistics[path] << ip
     end
+    @page_views = hash_sort_decending log_statistics.transform_values(&:count)
+    @unique_page_views = hash_sort_decending log_statistics.transform_values {|ips| ips.uniq.count }
     self
-  end
-
-  def page_views
-    hash_sort_decending log_statistics.transform_values(&:count)
-  end
-
-  def unique_page_views
-    hash_sort_decending log_statistics.transform_values {|ips| ips.uniq.count }
   end
 
   private
