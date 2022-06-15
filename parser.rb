@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 require './log_printer'
+require './log_table_printer'
 
 class Parser
   attr_reader :file_name, :log_printer
@@ -31,7 +32,11 @@ class Parser
 end
 
 if $0 == __FILE__
-  puts Parser.new(ARGV.first).run
-  # Parser.new(ARGV.first)
+  case ARGV[1]
+  when '--table'
+    puts Parser.new(ARGV.first, log_printer: LogTablePrinter).run
+  else
+    puts Parser.new(ARGV.first).run
+  end
 end
 
