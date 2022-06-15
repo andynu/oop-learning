@@ -5,6 +5,8 @@ class LogProcessor
   attr_accessor :log_file, :log_statistics
 
   def initialize(file_name)
+    return unless file_name == 'links.log'
+
     self.log_file = File.read(file_name)
     self.log_statistics = {}
     process_log_file
