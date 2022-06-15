@@ -1,6 +1,8 @@
 #!/usr/bin/ruby
 # frozen_string_literal: true
 
+require 'ostruct'
+
 class LogProcessor
   attr_reader :page_views, :unique_page_views
 
@@ -14,9 +16,10 @@ class LogProcessor
     log_events = File.readlines(@file_name).map { |line| LogEvent.new(*line.split) }
     log_statistics = log_events.group_by(&:path).transform_values{ |events| events.map(&:ip) }
 
-    @page_views = hash_sort_decending log_statistics.transform_values(&:count)
-    @unique_page_views = hash_sort_decending log_statistics.transform_values { |ips| ips.uniq.count }
-    self
+    OpenStruct.new(
+      page_views: hash_sort_decending(log_statistics.transform_values(&:count)),
+      unique_page_views: hash_sort_decending(log_statistics.transform_values { |ips| ips.uniq.count })
+    )
   end
 
   private
