@@ -10,7 +10,7 @@ class LogPrinter
     @log_processor = log_processor
   end
 
-  def print_aggregate
+  def to_s
     [
       'WEBPAGES WITH MOST PAGE VIEWS:',
       most_page_views,
@@ -28,7 +28,6 @@ class LogPrinter
   def most_unique_page_views
     fmt_hash log_processor.unique_page_views, 'unique views'
   end
-
 
   def fmt_hash(hash, count_label)
     hash.map { |key, value| "#{key} - #{value} #{count_label}" }.join("\n")

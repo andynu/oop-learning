@@ -18,7 +18,7 @@ class Parser
 
     log_processor = @log_processor_class.new(file_name)
     log_printer = @log_printer_class.new(log_processor)
-    log_printer.print_aggregate
+    log_printer
   end
 
   private
