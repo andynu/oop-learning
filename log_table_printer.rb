@@ -22,16 +22,15 @@ class LogTablePrinter
   private
 
   def most_page_views
-    page_views = page_stats.transform_values(&:page_views).sort_by(&pair_arr_sort).reverse
-    fmt_hash_table page_views, 'visits'
+    fmt_table :page_views, 'visits'
   end
 
   def most_unique_page_views
-    unique_page_views = page_stats.transform_values(&:unique_page_views).sort_by(&pair_arr_sort).reverse
-    fmt_hash_table unique_page_views, 'uniq views'
+    fmt_table :unique_page_views, 'uniq views'
   end
 
-  def fmt_hash_table(hash, value_label)
+  def fmt_table(key, value_label)
+    hash = page_stats.transform_values{|stats| stats.send(key)}.sort_by(&pair_arr_sort).reverse
     key_max_size = hash.to_h.keys.map(&:size).max
     value_max_size = hash.to_h.values.map(&:to_s).map(&:size).max
     hash.map do |path, uniq_ips|
