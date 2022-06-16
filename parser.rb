@@ -2,22 +2,21 @@
 # frozen_string_literal: true
 
 require './log_printer'
-require './log_table_printer'
 
 class Parser
   attr_reader :file_name
 
-  def initialize(file_name, log_printer: LogPrinter, log_processor: LogProcessor)
+  def initialize(file_name, log_printer: :list, log_processor: LogProcessor)
     @file_name = file_name
     @log_processor_class = log_processor
-    @log_printer_class = log_printer
+    @log_printer_strategy = log_printer
   end
 
   def run
     return expected_command_hint unless file_name_correct?
 
     aggregated_data = @log_processor_class.new(file_name).process
-    log_printer = @log_printer_class.new(aggregated_data)
+    log_printer = LogPrinter.new(aggregated_data, strategy: @log_printer_strategy)
     log_printer
   end
 
@@ -35,7 +34,7 @@ end
 if $0 == __FILE__
   case ARGV[1]
   when '--table'
-    puts Parser.new(ARGV.first, log_printer: LogTablePrinter).run
+    puts Parser.new(ARGV.first, log_printer: :table).run
   else
     puts Parser.new(ARGV.first).run
   end
