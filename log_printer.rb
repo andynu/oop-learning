@@ -13,21 +13,13 @@ class LogPrinter
   def to_s
     [
       'WEBPAGES WITH MOST PAGE VIEWS:',
-      most_page_views,
+      fmt_list(:page_views, 'visits'),
       'WEBPAGES WITH MOST UNIQUE PAGE VIEWS:',
-      most_unique_page_views
+      fmt_list(:unique_page_views, 'unique views')
     ].join("\n")
   end
 
   private
-
-  def most_page_views
-    fmt_list :page_views, 'visits'
-  end
-
-  def most_unique_page_views
-    fmt_list :unique_page_views, 'unique views'
-  end
 
   def fmt_list(key, count_label)
     hash = page_stats.transform_values{|stats| stats.send(key)}.sort_by(&pair_arr_sort).reverse
