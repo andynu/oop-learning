@@ -46,7 +46,7 @@ class TestParser < Minitest::Test
       |     /contact | 1 unique views |
 
     STR
-    actual = Parser.new('links.log', log_printer: :table).run.to_s
+    actual = Parser.new('links.log', log_printer: LogPrinter::Table).run.to_s
 
     assert_equal expected, actual
   end

@@ -4,11 +4,10 @@
 require './log_processor'
 
 class LogPrinter
-  attr_reader :page_stats, :strategy
+  attr_reader :page_stats
 
-  def initialize(page_stats, strategy: :list)
+  def initialize(page_stats)
     @page_stats = page_stats
-    @strategy = strategy
   end
 
   def to_s
@@ -20,31 +19,27 @@ class LogPrinter
     ].join("\n\n")
   end
 
-  private
 
-  def fmt(key, label)
-    case strategy
-    when :table
-      fmt_table(key, label)
-    else
-      fmt_list(key, label)
+  class List < LogPrinter
+    def fmt(key, count_label)
+      hash = page_stats.transform_values{|stats| stats.send(key)}.sort_by(&pair_arr_sort).reverse
+      hash.map { |path, value| "#{path} - #{value} #{count_label}" }.join("\n")
     end
   end
 
-  def fmt_list(key, count_label)
-    hash = page_stats.transform_values{|stats| stats.send(key)}.sort_by(&pair_arr_sort).reverse
-    hash.map { |path, value| "#{path} - #{value} #{count_label}" }.join("\n")
+  class Table < LogPrinter
+    def fmt(key, value_label)
+      hash = page_stats.transform_values{|stats| stats.send(key)}.sort_by(&pair_arr_sort).reverse
+      key_max_size = hash.to_h.keys.map(&:size).max
+      value_max_size = hash.to_h.values.map(&:to_s).map(&:size).max
+      hash.map do |path, uniq_ips|
+        "| %#{key_max_size}s | %#{value_max_size}s %s |" %
+          [path, uniq_ips, value_label]
+      end.join("\n")
+    end
   end
 
-  def fmt_table(key, value_label)
-    hash = page_stats.transform_values{|stats| stats.send(key)}.sort_by(&pair_arr_sort).reverse
-    key_max_size = hash.to_h.keys.map(&:size).max
-    value_max_size = hash.to_h.values.map(&:to_s).map(&:size).max
-    hash.map do |path, uniq_ips|
-      "| %#{key_max_size}s | %#{value_max_size}s %s |" %
-        [path, uniq_ips, value_label]
-    end.join("\n")
-  end
+  private
 
   def pair_arr_sort
     lambda {|(k, v)| v }
